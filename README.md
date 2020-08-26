@@ -31,7 +31,7 @@ Don't forget to sign up (perform the consent) afterwards!
 
 Simple powershell function to allow someone to shutdown and startup a VM using the above logicApp
 
-The use case here someone who doesn't have access to anything else, but with this they can perform basic cost saving tasks (shutting down Azure VM when not in use)
+The use case here is someone who doesn't have access to the azure resources, but need to perform basic cost saving tasks (shutting down Azure VM when not in use)
 
 Recommanded use is to add the function in the profile with the HTTP endpoint from the logicApp.
 Then all you have to do is
