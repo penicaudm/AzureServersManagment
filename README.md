@@ -15,7 +15,7 @@ Don't forget to sign up (perform the consent) afterwards!
 # Start-StopAzureVM function
 
 ### NAME
-    ManageAstroneerVM
+    Start-StopAzureVM
 
 ### SYNTAX
     Start-StopAzureVM [-action] {shutdown | startup} [-LogicAppURI <string>]  [<CommonParameters>]
