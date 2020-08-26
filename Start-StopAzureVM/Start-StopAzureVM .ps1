@@ -1,4 +1,4 @@
-function ManageAstroneerVM {
+function Start-StopAzureVM {
     [cmdletbinding ()]
     param(
         # Action to perform
