@@ -1,0 +1,128 @@
+{
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        "actions": {
+            "Condition": {
+                "actions": {
+                    "Power_off_virtual_machine": {
+                        "inputs": {
+                            "host": {
+                                "connection": {
+                                    "name": "@parameters('$connections')['azurevm']['connectionId']"
+                                }
+                            },
+                            "method": "post",
+                            "path": "/subscriptions/@{encodeURIComponent('SUBSCRIPTION-ID')}/resourcegroups/@{encodeURIComponent('RG-NAME')}/providers/Microsoft.Compute/virtualMachines/@{encodeURIComponent('VM-NAME')}/powerOff",
+                            "queries": {
+                                "api-version": "2019-12-01"
+                            }
+                        },
+                        "runAfter": {},
+                        "type": "ApiConnection"
+                    }
+                },
+                "else": {
+                    "actions": {
+                        "Condition_2": {
+                            "actions": {
+                                "Start_virtual_machine": {
+                                    "inputs": {
+                                        "host": {
+                                            "connection": {
+                                                "name": "@parameters('$connections')['azurevm']['connectionId']"
+                                            }
+                                        },
+                                        "method": "post",
+                                        "path": "/subscriptions/@{encodeURIComponent('SUBSCRIPTION-ID')}/resourcegroups/@{encodeURIComponent('RG-NAME')}/providers/Microsoft.Compute/virtualMachines/@{encodeURIComponent('VM-NAME')}/start",
+                                        "queries": {
+                                            "api-version": "2019-12-01"
+                                        }
+                                    },
+                                    "runAfter": {},
+                                    "type": "ApiConnection"
+                                }
+                            },
+                            "expression": {
+                                "and": [
+                                    {
+                                        "equals": [
+                                            "@variables('HTTPaction')",
+                                            "startup"
+                                        ]
+                                    }
+                                ]
+                            },
+                            "runAfter": {},
+                            "type": "If"
+                        }
+                    }
+                },
+                "expression": {
+                    "and": [
+                        {
+                            "equals": [
+                                "@variables('HTTPaction')",
+                                "shutdown"
+                            ]
+                        }
+                    ]
+                },
+                "runAfter": {
+                    "Initialize_variable": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "If"
+            },
+            "Initialize_variable": {
+                "inputs": {
+                    "variables": [
+                        {
+                            "name": "HTTPaction",
+                            "type": "string",
+                            "value": "@triggerBody()?['action']"
+                        }
+                    ]
+                },
+                "runAfter": {},
+                "type": "InitializeVariable"
+            }
+        },
+        "contentVersion": "1.0.0.0",
+        "outputs": {},
+        "parameters": {
+            "$connections": {
+                "defaultValue": {},
+                "type": "Object"
+            }
+        },
+        "triggers": {
+            "manual": {
+                "inputs": {
+                    "method": "POST",
+                    "schema": {
+                        "properties": {
+                            "action": {
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "kind": "Http",
+                "type": "Request"
+            }
+        }
+    },
+    "parameters": {
+        "$connections": {
+            "value": {
+                "azurevm": {
+                    "connectionId": "/subscriptions/SUBSCRIPTION-ID/resourceGroups/RG-NAME/providers/Microsoft.Web/connections/azurevm",
+                    "connectionName": "azurevm",
+                    "id": "/subscriptions/SUBSCRIPTION-ID/providers/Microsoft.Web/locations/francecentral/managedApis/azurevm"
+                }
+            }
+        }
+    }
+}
